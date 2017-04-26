@@ -33,19 +33,17 @@ public class CatalogClient {
 	}
 
 	private RestTemplate restTemplate;
-	private String catalogServiceHost;
 	private long catalogServicePort;
 	private boolean useRibbon;
 	private LoadBalancerClient loadBalancer;
 	private Collection<Item> itemsCache = null;
 
 	@Autowired
-	public CatalogClient(@Value("${catalog.service.host:catalog}") String catalogServiceHost,
-			@Value("${catalog.service.port:8080}") long catalogServicePort,
+	public CatalogClient(
+			@Value("${local.server.port:0}") long catalogServicePort,
 			@Value("${spring.cloud.consul.ribbon.enabled:false}") boolean useRibbon) {
 		super();
 		this.restTemplate = getRestTemplate();
-		this.catalogServiceHost = catalogServiceHost;
 		this.catalogServicePort = catalogServicePort;
 		this.useRibbon = useRibbon;
 	}
@@ -95,7 +93,7 @@ public class CatalogClient {
 			ServiceInstance instance = loadBalancer.choose("CATALOG");
 			url = String.format("http://%s:%s/catalog", instance.getHost(), instance.getPort());
 		} else {
-			url = String.format("http://%s:%s/catalog", catalogServiceHost, catalogServicePort);
+			url = String.format("http://%s:%s/catalog", "localhost", catalogServicePort);
 		}
 		log.trace("Catalog: URL {} ", url);
 		return url;

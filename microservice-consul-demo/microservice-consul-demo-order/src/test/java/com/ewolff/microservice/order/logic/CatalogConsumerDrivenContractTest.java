@@ -1,23 +1,23 @@
 package com.ewolff.microservice.order.logic;
 
-import com.ewolff.microservice.order.OrderApp;
-import com.ewolff.microservice.order.clients.CatalogClient;
-import com.ewolff.microservice.order.clients.Item;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
+import com.ewolff.microservice.order.OrderApp;
+import com.ewolff.microservice.order.clients.CatalogClient;
+import com.ewolff.microservice.order.clients.Item;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = OrderApp.class, webEnvironment = DEFINED_PORT)
+@SpringBootTest(classes = OrderApp.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class CatalogConsumerDrivenContractTest {
 
