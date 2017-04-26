@@ -77,8 +77,7 @@ Technologies
   project . Note that the CustomerClient won't use Hystrix. This way
   you can see how a crash of the Customer microservices makes the
   Order microservice useless.
-- Hystrix has a dashboard. [Turbine](https://github.com/netflix/Turbine) can be used to combine the data
-from multiple sources i.e. `hystrix.stream`s. **Unfortunately this does not work at the moment.**
+- Hystrix has a dashboard.
 
 
 How To Run
