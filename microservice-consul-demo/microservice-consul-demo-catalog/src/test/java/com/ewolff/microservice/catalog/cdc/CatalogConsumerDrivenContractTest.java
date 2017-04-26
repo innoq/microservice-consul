@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.ewolff.microservice.catalog.CatalogApp;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = CatalogApp.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = CatalogApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 public class CatalogConsumerDrivenContractTest {
 

@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomerClient {
 
 	private RestTemplate restTemplate;
-	private String customerServiceHost;
 	private long customerServicePort;
 	private boolean useRibbon;
 	private LoadBalancerClient loadBalancer;
@@ -36,12 +35,10 @@ public class CustomerClient {
 
 	@Autowired
 	public CustomerClient(
-			@Value("${customer.service.host:customer}") String customerServiceHost,
-			@Value("${customer.service.port:8080}") long customerServicePort,
-			@Value("${ribbon.eureka.enabled:false}") boolean useRibbon) {
+			@Value("${customer.service.port}") long customerServicePort,
+			@Value("${ribbon.enabled}") boolean useRibbon) {
 		super();
 		this.restTemplate = getRestTemplate();
-		this.customerServiceHost = customerServiceHost;
 		this.customerServicePort = customerServicePort;
 		this.useRibbon = useRibbon;
 	}
@@ -86,15 +83,14 @@ public class CustomerClient {
 	}
 
 	private String customerURL() {
+		String url;
 		if (useRibbon) {
 			ServiceInstance instance = loadBalancer.choose("CUSTOMER");
-			return "http://" + instance.getHost() + ":" + instance.getPort()
-					+ "/customer/";
+			url = String.format("http://%s:%s/customer/", instance.getHost(), instance.getPort());
 		} else {
-			return "http://" + customerServiceHost + ":" + customerServicePort
-					+ "/customer/";
+			url = String.format("http://%s:%s/customer/", "localhost", customerServicePort);
 		}
-
+		return url;
 	}
 
 	public Customer getOne(long customerId) {

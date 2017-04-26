@@ -40,8 +40,8 @@ public class CatalogClient {
 
 	@Autowired
 	public CatalogClient(
-			@Value("${local.server.port:0}") long catalogServicePort,
-			@Value("${spring.cloud.consul.ribbon.enabled:false}") boolean useRibbon) {
+			@Value("${catalog.service.port}") long catalogServicePort,
+			@Value("${ribbon.enabled}") boolean useRibbon) {
 		super();
 		this.restTemplate = getRestTemplate();
 		this.catalogServicePort = catalogServicePort;
@@ -91,9 +91,9 @@ public class CatalogClient {
 		String url;
 		if (useRibbon) {
 			ServiceInstance instance = loadBalancer.choose("CATALOG");
-			url = String.format("http://%s:%s/catalog", instance.getHost(), instance.getPort());
+			url = String.format("http://%s:%s/catalog/", instance.getHost(), instance.getPort());
 		} else {
-			url = String.format("http://%s:%s/catalog", "localhost", catalogServicePort);
+			url = String.format("http://%s:%s/catalog/", "localhost", catalogServicePort);
 		}
 		log.trace("Catalog: URL {} ", url);
 		return url;

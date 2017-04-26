@@ -29,7 +29,6 @@ public class CustomerClient {
 	private final Logger log = LoggerFactory.getLogger(CustomerClient.class);
 
 	private RestTemplate restTemplate;
-	private String customerServiceHost;
 	private long customerServicePort;
 	private boolean useRibbon;
 	private LoadBalancerClient loadBalancer;
@@ -39,12 +38,10 @@ public class CustomerClient {
 	}
 
 	@Autowired
-	public CustomerClient(@Value("${customer.service.host:customer}") String customerServiceHost,
-			@Value("${customer.service.port:8080}") long customerServicePort,
-			@Value("${spring.cloud.consul.ribbon.enabled:false}") boolean useRibbon) {
+	public CustomerClient(@Value("${customer.service.port}") long customerServicePort,
+			@Value("${ribbon.enabled}") boolean useRibbon) {
 		super();
 		this.restTemplate = getRestTemplate();
-		this.customerServiceHost = customerServiceHost;
 		this.customerServicePort = customerServicePort;
 		this.useRibbon = useRibbon;
 	}
@@ -91,11 +88,10 @@ public class CustomerClient {
 			ServiceInstance instance = loadBalancer.choose("CUSTOMER");
 			url = String.format("http://%s:%s/customer/", instance.getHost(), instance.getPort());
 		} else {
-			url = String.format("http://%s:%s/customer/", customerServiceHost, customerServicePort);
+			url = String.format("http://%s:%s/customer/", "localhost", customerServicePort);
 		}
 		log.trace("Customer: URL {} ", url);
 		return url;
-
 	}
 
 	public Customer getOne(long customerId) {

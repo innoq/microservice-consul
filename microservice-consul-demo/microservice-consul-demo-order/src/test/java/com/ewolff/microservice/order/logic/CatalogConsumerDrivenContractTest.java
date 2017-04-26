@@ -17,7 +17,7 @@ import com.ewolff.microservice.order.clients.CatalogClient;
 import com.ewolff.microservice.order.clients.Item;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = OrderApp.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = OrderApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 public class CatalogConsumerDrivenContractTest {
 

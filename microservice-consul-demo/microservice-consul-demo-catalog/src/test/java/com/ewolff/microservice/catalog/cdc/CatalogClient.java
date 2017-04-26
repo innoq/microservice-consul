@@ -26,19 +26,16 @@ public class CatalogClient {
 	}
 
 	private final RestTemplate restTemplate;
-	private final String catalogServiceHost;
 	private final long catalogServicePort;
 	private final boolean useRibbon;
 	private LoadBalancerClient loadBalancer;
 
 	@Autowired
 	public CatalogClient(
-			@Value("${catalog.service.host:catalog}") String catalogServiceHost,
 			@Value("${catalog.service.port:8080}") long catalogServicePort,
-			@Value("${ribbon.eureka.enabled:false}") boolean useRibbon) {
+			@Value("${ribbon.enabled}") boolean useRibbon) {
 		super();
 		this.restTemplate = getRestTemplate();
-		this.catalogServiceHost = catalogServiceHost;
 		this.catalogServicePort = catalogServicePort;
 		this.useRibbon = useRibbon;
 	}
@@ -73,14 +70,14 @@ public class CatalogClient {
 	}
 
 	private String catalogURL() {
+		String url;
 		if (useRibbon) {
 			ServiceInstance instance = loadBalancer.choose("CATALOG");
-			return "http://" + instance.getHost() + ":" + instance.getPort()
-					+ "/catalog/";
+			url = String.format("http://%s:%s/catalog/", instance.getHost(), instance.getPort());
 		} else {
-			return "http://" + catalogServiceHost + ":" + catalogServicePort
-					+ "/catalog/";
+			url = String.format("http://%s:%s/catalog/", "localhost", catalogServicePort);
 		}
+		return url;
 	}
 
 	public Item getOne(long itemId) {
